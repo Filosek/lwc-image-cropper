@@ -108,6 +108,7 @@ export default class ImageCropper extends LightningElement {
     uploadFile() {
         imageUploader({fileName: this.imageName, imageBase64: this.croppedImageDataUrl, recordId: this.recordId})
             .then(() => {
+                eval("$A.get('e.force:refreshView').fire();");
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success!',
