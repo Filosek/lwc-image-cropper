@@ -4,7 +4,23 @@ import {ShowToastEvent} from 'lightning/platformShowToastEvent';
 import cropprResource from '@salesforce/resourceUrl/croppr';
 import imageUploader from '@salesforce/apex/ImageCropper.uploadCroppedImage';
 
+import IMAGE_CROPPER_BROKEN_FILE_ALT_TEXT from '@salesforce/label/c.ImageCropperBrokenFileAltText';
+import IMAGE_CROPPER_BUTTON_LABEL from '@salesforce/label/c.ImageCropperButtonLabel';
+import IMAGE_CROPPER_ERROR_TITLE from '@salesforce/label/c.ImageCropperErrorTitle';
+import IMAGE_CROPPER_LABEL from '@salesforce/label/c.ImageCropperLabel';
+import IMAGE_CROPPER_SUCCESS_TITLE from '@salesforce/label/c.ImageCropperSuccessTitle';
+import IMAGE_CROPPER_UPLOAD_SUCCESS_MESSAGE from '@salesforce/label/c.ImageCropperUploadSuccessMessage';
+
 export default class ImageCropper extends LightningElement {
+    LABELS = {
+        IMAGE_CROPPER_BROKEN_FILE_ALT_TEXT,
+        IMAGE_CROPPER_BUTTON_LABEL,
+        IMAGE_CROPPER_ERROR_TITLE,
+        IMAGE_CROPPER_LABEL,
+        IMAGE_CROPPER_SUCCESS_TITLE,
+        IMAGE_CROPPER_UPLOAD_SUCCESS_MESSAGE
+    }
+
     cropprCssUrl = `${cropprResource}/croppr.min.css`;
     cropprJsUrl = `${cropprResource}/croppr.min.js`;
     imageCroppr = {};
@@ -50,7 +66,7 @@ export default class ImageCropper extends LightningElement {
             .catch(error => {
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Error!',
+                        title: this.LABELS.IMAGE_CROPPER_ERROR_TITLE,
                         message: error.message,
                         variant: 'error'
                     })
@@ -111,8 +127,8 @@ export default class ImageCropper extends LightningElement {
                 eval("$A.get('e.force:refreshView').fire();");
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Success!',
-                        message: 'File uploaded successfully.',
+                        title: this.LABELS.IMAGE_CROPPER_SUCCESS_TITLE,
+                        message: this.LABELS.IMAGE_CROPPER_UPLOAD_SUCCESS_MESSAGE,
                         variant: 'success'
                     })
                 );
@@ -120,7 +136,7 @@ export default class ImageCropper extends LightningElement {
             .catch(error => {
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Error!',
+                        title: this.LABELS.IMAGE_CROPPER_ERROR_TITLE,
                         message: error.message,
                         variant: 'error'
                     })

@@ -2,7 +2,7 @@
     <template if:true={isComponentReady}>
         <div class="slds-m-around_medium">
             <lightning-input type="file"
-                             label="Upload File"
+                             label={LABELS.IMAGE_CROPPER_LABEL}
                              onchange={handleFileChange}
                              accept="image/png, image/jpg"
             ></lightning-input>
@@ -11,10 +11,10 @@
                      class="slds-m-vertical_large"
                      style="display: none"
                      onload={imageLoadHandler}
-                     alt="Image cropper canvas"/>
+                     alt={LABELS.IMAGE_CROPPER_BROKEN_FILE_ALT_TEXT}/>
             </div>
             <template if:true={isCroppingEnabled}>
-                <lightning-button label="Crop & Upload"
+                <lightning-button label={LABELS.IMAGE_CROPPER_BUTTON_LABEL}
                                   onclick={handleImageCrop}
                                   class="slds-m-vertical_medium"
                 ></lightning-button>

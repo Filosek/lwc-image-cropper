@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>ImageCropperBrokenFileAltText</fullName>
+        <categories>Image Cropper</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Image Cropper alternative text for broken file</shortDescription>
+        <value>Image Cropper canvas for an uploaded image, if you see this, your image is probably broken.</value>
+    </labels>
+    <labels>
+        <fullName>ImageCropperButtonLabel</fullName>
+        <categories>Image Cropper</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Image Cropper button label</shortDescription>
+        <value>Crop &amp; Upload</value>
+    </labels>
+    <labels>
+        <fullName>ImageCropperErrorTitle</fullName>
+        <categories>Image Cropper</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Image Cropper error title</shortDescription>
+        <value>Error!</value>
+    </labels>
+    <labels>
+        <fullName>ImageCropperLabel</fullName>
+        <categories>Image Cropper</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Image Cropper label</shortDescription>
+        <value>Upload Image</value>
+    </labels>
+    <labels>
+        <fullName>ImageCropperSuccessTitle</fullName>
+        <categories>Image Cropper</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Image Cropper success title</shortDescription>
+        <value>Success!</value>
+    </labels>
+    <labels>
+        <fullName>ImageCropperUploadSuccessMessage</fullName>
+        <categories>Image Cropper</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Image Cropper upload success message</shortDescription>
+        <value>Image uploaded successfully.</value>
+    </labels>
+</CustomLabels>
