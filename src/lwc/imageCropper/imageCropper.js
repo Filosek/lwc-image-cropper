@@ -76,7 +76,10 @@ export default class ImageCropper extends LightningElement {
     }
 
     handleFileChange(event) {
-        this.cropprInitialized = false;
+        if (this.cropprInitialized) {
+            this.imageCroppr.destroy();
+            this.cropprInitialized = false;
+        }
         const [file] = event.target.files;
         this.imageName = file.name;
         if (file) {
