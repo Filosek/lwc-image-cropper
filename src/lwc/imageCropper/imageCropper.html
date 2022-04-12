@@ -1,0 +1,25 @@
+<template>
+    <template if:true={isComponentReady}>
+        <div class="slds-m-around_medium">
+            <lightning-input type="file"
+                             label="Upload File"
+                             onchange={handleFileChange}
+                             accept="image/png, image/jpg"
+            ></lightning-input>
+            <div class="slds-m-vertical_medium">
+                <img src="#"
+                     class="slds-m-vertical_large"
+                     style="display: none"
+                     onload={imageLoadHandler}
+                     alt="Image cropper canvas"/>
+            </div>
+            <template if:true={isCroppingEnabled}>
+                <lightning-button label="Crop!"
+                                  onclick={handleImageCrop}
+                                  class="slds-m-vertical_medium"
+                ></lightning-button>
+            </template>
+            <canvas style="display: none"></canvas>
+        </div>
+    </template>
+</template>
