@@ -15,7 +15,6 @@ export default class ImageCropper extends LightningElement {
     imageMimeType = '';
     imageName = '';
 
-    croppedImageBlob;
     croppedImageObject = {};
 
     @api aspectRatio = null;
