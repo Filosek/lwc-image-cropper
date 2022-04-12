@@ -2,6 +2,7 @@ import {LightningElement, api} from 'lwc';
 import {loadScript, loadStyle} from 'lightning/platformResourceLoader';
 import {ShowToastEvent} from 'lightning/platformShowToastEvent';
 import cropprResource from '@salesforce/resourceUrl/croppr';
+import imageUploader from '@salesforce/apex/ImageCropper.uploadCroppedImage';
 
 export default class ImageCropper extends LightningElement {
     cropprCssUrl = `${cropprResource}/croppr.min.css`;
@@ -15,13 +16,14 @@ export default class ImageCropper extends LightningElement {
     imageMimeType = '';
     imageName = '';
 
-    croppedImageObject = {};
+    croppedImageDataUrl = '';
 
     @api aspectRatio = null;
     @api maxCropWidth = 0;
     @api maxCropHeight = 0;
     @api minCropWidth = 0;
     @api minCropHeight = 0;
+    @api recordId = '';
 
     get isComponentReady() {
         return this.isCropprLoaded;
@@ -53,7 +55,7 @@ export default class ImageCropper extends LightningElement {
                         variant: 'error'
                     })
                 );
-            })
+            });
     }
 
     prepareOptions() {
@@ -92,38 +94,33 @@ export default class ImageCropper extends LightningElement {
     handleImageCrop() {
         const croppedData = this.imageCroppr.getValue();
         let canvas = this.template.querySelector('canvas');
+        canvas.height = croppedData.height;
+        canvas.width = croppedData.width;
         let context = canvas.getContext('2d');
         context.drawImage(this.imageElement, croppedData.x, croppedData.y, croppedData.width, croppedData.height, 0, 0, croppedData.width, croppedData.height);
-        let croppedImageDataUrl = canvas.toDataURL(this.imageMimeType);
-        let croppedImageBlob = this.dataURLtoBlob(croppedImageDataUrl);
-        this.prepareCroppedImageObject(croppedImageBlob);
+        this.croppedImageDataUrl = canvas.toDataURL(this.imageMimeType).split(';base64,')[1];
+        this.uploadFile();
     }
 
-    dataURLtoBlob(dataURL) {
-        let BASE64_MARKER = ';base64,';
-        if(dataURL.indexOf(BASE64_MARKER) === -1) {
-            let parts = dataURL.split(',');
-            let contentType = parts[0].split(':')[1];
-            let raw = decodeURIComponent(parts[1]);
-
-            return new Blob([raw], {type: contentType});
-        }
-        let parts = dataURL.split(BASE64_MARKER);
-        let contentType = parts[0].split(':')[1];
-        let raw = window.atob(parts[1]);
-        let rawLength = raw.length;
-        let uInt8Array = new Uint8Array(rawLength);
-        for(let i = 0; i < rawLength; ++i) {
-            uInt8Array[i] = raw.charCodeAt(i);
-        }
-
-        return new Blob([uInt8Array], {type: contentType});
-    }
-
-    prepareCroppedImageObject(blob) {
-        this.croppedImageObject = {
-            blob: blob,
-            name: this.imageName
-        }
+    uploadFile() {
+        imageUploader({fileName: this.imageName, imageBase64: this.croppedImageDataUrl, recordId: this.recordId})
+            .then(() => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success!',
+                        message: 'File uploaded successfully.',
+                        variant: 'success'
+                    })
+                );
+            })
+            .catch(error => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error!',
+                        message: error.message,
+                        variant: 'error'
+                    })
+                );
+            })
     }
 }
