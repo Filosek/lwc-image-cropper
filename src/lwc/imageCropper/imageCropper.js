@@ -5,7 +5,7 @@ import cropprResource from '@salesforce/resourceUrl/croppr';
 
 export default class ImageCropper extends LightningElement {
     cropprCssUrl = `${cropprResource}/croppr.min.css`;
-    cropprJsUrl = `${cropprResource}/croppr.js`;
+    cropprJsUrl = `${cropprResource}/croppr.min.js`;
     imageCroppr = {};
     isCropprLoaded = false;
     cropprOptions = {};
