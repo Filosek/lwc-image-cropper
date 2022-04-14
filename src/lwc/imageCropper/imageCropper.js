@@ -33,6 +33,7 @@ export default class ImageCropper extends LightningElement {
     imageName = '';
 
     croppedImageDataUrl = '';
+    croppingEnabled = false;
 
     @api aspectRatio = null;
     @api maxCropWidth = 0;
@@ -46,7 +47,7 @@ export default class ImageCropper extends LightningElement {
     }
 
     get isCroppingEnabled() {
-        return this.isComponentReady && this.cropprInitialized;
+        return this.isComponentReady && this.cropprInitialized && this.croppingEnabled;
     }
 
     renderedCallback() {
@@ -76,28 +77,34 @@ export default class ImageCropper extends LightningElement {
 
     prepareOptions() {
         let options = {startSize: [100, 100, '%']};
+
         if (this.maxCropHeight && this.maxCropWidth) {
             options.maxSize = [this.maxCropWidth, this.maxCropHeight, 'px'];
         }
+
         if (this.minCropHeight && this.minCropWidth) {
             options.minSize = [this.minCropWidth, this.minCropHeight, 'px'];
         }
+
         if (this.aspectRatio && !isNaN(this.aspectRatio)) {
             options.aspectRatio = Number(this.aspectRatio);
         }
+
         options.onInitialize = () => {
             this.cropprInitialized = true;
         }
+
         return options;
     }
 
     handleFileChange(event) {
         if (this.cropprInitialized) {
-            this.imageCroppr.destroy();
             this.cropprInitialized = false;
         }
+
         const [file] = event.target.files;
         this.imageName = file.name;
+
         if (file) {
             this.imageElement = this.template.querySelector('img');
             this.imageElement.src = URL.createObjectURL(file);
@@ -107,16 +114,20 @@ export default class ImageCropper extends LightningElement {
 
     imageLoadHandler(event) {
         event.target.style = '';
+        this.croppingEnabled = true;
         this.imageCroppr = new Croppr(this.imageElement, this.cropprOptions);
     }
 
     handleImageCrop() {
         const croppedData = this.imageCroppr.getValue();
         let canvas = this.template.querySelector('canvas');
+
         canvas.height = croppedData.height;
         canvas.width = croppedData.width;
+
         let context = canvas.getContext('2d');
         context.drawImage(this.imageElement, croppedData.x, croppedData.y, croppedData.width, croppedData.height, 0, 0, croppedData.width, croppedData.height);
+
         this.croppedImageDataUrl = canvas.toDataURL(this.imageMimeType).split(';base64,')[1];
         this.uploadFile();
     }
@@ -125,6 +136,11 @@ export default class ImageCropper extends LightningElement {
         imageUploader({fileName: this.imageName, imageBase64: this.croppedImageDataUrl, recordId: this.recordId})
             .then(() => {
                 eval("$A.get('e.force:refreshView').fire();");
+
+                this.croppingEnabled = false;
+                this.imageCroppr.destroy();
+                this.imageElement.style = 'display: none;';
+
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: this.LABELS.IMAGE_CROPPER_SUCCESS_TITLE,
