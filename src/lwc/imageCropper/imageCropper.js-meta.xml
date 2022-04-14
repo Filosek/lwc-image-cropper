@@ -12,14 +12,14 @@
     <targetConfigs>
         <targetConfig targets="lightningCommunity__Default">
             <property name="recordId" label="Record Id" description="Id of record to which you want to add cropped image" type="String" default="{!recordId}"/>
-            <property name="aspectRatio" label="Aspect ratio" type="Integer"/>
+            <property name="aspectRatio" label="Aspect ratio" type="String"/>
             <property name="maxCropWidth" label="Max crop width" type="Integer"/>
             <property name="maxCropHeight" label="Max crop height" type="Integer"/>
             <property name="minCropWidth" label="Min crop width" type="Integer"/>
             <property name="minCropHeight" label="Min crop height" type="Integer"/>
         </targetConfig>
         <targetConfig targets="lightning__RecordPage">
-            <property name="aspectRatio" label="Aspect ratio" type="Integer"/>
+            <property name="aspectRatio" label="Aspect ratio" type="String"/>
             <property name="maxCropWidth" label="Max crop width" type="Integer"/>
             <property name="maxCropHeight" label="Max crop height" type="Integer"/>
             <property name="minCropWidth" label="Min crop width" type="Integer"/>
