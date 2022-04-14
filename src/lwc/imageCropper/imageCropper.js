@@ -75,15 +75,15 @@ export default class ImageCropper extends LightningElement {
     }
 
     prepareOptions() {
-        let options = {startSize: [100, 100, '%']}
+        let options = {startSize: [100, 100, '%']};
         if (this.maxCropHeight && this.maxCropWidth) {
             options.maxSize = [this.maxCropWidth, this.maxCropHeight, 'px'];
         }
         if (this.minCropHeight && this.minCropWidth) {
             options.minSize = [this.minCropWidth, this.minCropHeight, 'px'];
         }
-        if (this.aspectRatio) {
-            options.aspectRatio = this.aspectRatio;
+        if (this.aspectRatio && !isNaN(this.aspectRatio)) {
+            options.aspectRatio = Number(this.aspectRatio);
         }
         options.onInitialize = () => {
             this.cropprInitialized = true;
