@@ -577,21 +577,23 @@
     createClass(CropprCore, [{
       key: 'initialize',
       value: function initialize(element) {
-        this.createDOM(element);
-        this.options.convertToPixels(this.cropperEl);
-        this.attachHandlerEvents();
-        this.attachRegionEvents();
-        this.attachOverlayEvents();
-        this.box = this.initializeBox(this.options);
-        this.redraw();
-        this._initialized = true;
-        if (this.options.onInitialize !== null) {
-          this.options.onInitialize(this);
-        }
+        Promise.all(this.createDOM(element)).then(() => {
+          this.options.convertToPixels(this.cropperEl);
+          this.attachHandlerEvents();
+          this.attachRegionEvents();
+          this.attachOverlayEvents();
+          this.box = this.initializeBox(this.options);
+          this.redraw();
+          this._initialized = true;
+          if (this.options.onInitialize !== null) {
+            this.options.onInitialize(this);
+          }
+        });
       }
     }, {
       key: 'createDOM',
       value: function createDOM(targetEl) {
+        let domPromises = [];
         this.containerEl = document.createElement('div');
         this.containerEl.className = 'croppr-container';
         this.eventBus = this.containerEl;
@@ -599,6 +601,11 @@
         this.cropperEl = document.createElement('div');
         this.cropperEl.className = 'croppr';
         this.imageEl = document.createElement('img');
+        domPromises.push(new Promise((resolve) => {
+          this.imageEl.onload = () => {
+            resolve();
+          }
+        }))
         this.imageEl.setAttribute('src', targetEl.getAttribute('src'));
         this.imageEl.setAttribute('alt', targetEl.getAttribute('alt'));
         this.imageEl.className = 'croppr-image';
@@ -616,13 +623,17 @@
           this.handles.push(handle);
           handleContainerEl.appendChild(handle.el);
         }
-        this.cropperEl.appendChild(this.imageEl);
-        this.cropperEl.appendChild(this.imageClippedEl);
-        this.cropperEl.appendChild(this.regionEl);
-        this.cropperEl.appendChild(this.overlayEl);
-        this.cropperEl.appendChild(handleContainerEl);
-        this.containerEl.appendChild(this.cropperEl);
-        targetEl.parentElement.replaceChild(this.containerEl, targetEl);
+        domPromises.push(new Promise((resolve) => {
+          this.cropperEl.appendChild(this.imageEl);
+          this.cropperEl.appendChild(this.imageClippedEl);
+          this.cropperEl.appendChild(this.regionEl);
+          this.cropperEl.appendChild(this.overlayEl);
+          this.cropperEl.appendChild(handleContainerEl);
+          this.containerEl.appendChild(this.cropperEl);
+          targetEl.parentElement.replaceChild(this.containerEl, targetEl);
+          resolve();
+        }));
+        return domPromises;
       }
       /**
        * Changes the image src.
