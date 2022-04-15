@@ -23,7 +23,7 @@ export default class ImageCropper extends LightningElement {
 
     cropprCssUrl = `${cropprResource}/croppr.min.css`;
     cropprJsUrl = `${cropprResource}/croppr.min.js`;
-    imageCroppr = {};
+    imageCroppr;
     isCropprLoaded = false;
     cropprOptions = {};
     cropprInitialized = false;
@@ -100,6 +100,9 @@ export default class ImageCropper extends LightningElement {
     handleFileChange(event) {
         if (this.cropprInitialized) {
             this.cropprInitialized = false;
+            if (this.imageCroppr) {
+                this.imageCroppr.destroy();
+            }
         }
 
         const [file] = event.target.files;
@@ -139,6 +142,7 @@ export default class ImageCropper extends LightningElement {
 
                 this.croppingEnabled = false;
                 this.imageCroppr.destroy();
+                this.imageCroppr = null;
                 this.imageElement.style = 'display: none;';
 
                 this.dispatchEvent(
